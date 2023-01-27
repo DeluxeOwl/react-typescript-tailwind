@@ -1,9 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import ky from "ky";
 
 interface User {
   id: number;
-  name: string;
+  email: string;
   age: number;
 }
 
@@ -17,6 +17,12 @@ function UserList() {
     queryFn: () => ky.get("/users").json(),
   });
 
+  const newUserMutation = useMutation({
+    mutationFn: ({ email, age }: Omit<User, "id">) => {
+      return ky.post("/users", { json: { email, age } }).json();
+    },
+  });
+
   if (isLoading) {
     return <div>Loading ...</div>;
   }
@@ -27,7 +33,12 @@ function UserList() {
 
   return (
     <>
-      <button className="active:translate-y-1 transition-all inline-flex justify-center rounded-lg text-sm font-semibold py-3 px-4 bg-neutral-800 text-white hover:bg-neutral-700 shadow-md">
+      <button
+        className="active:translate-y-1 transition-all inline-flex justify-center rounded-lg text-sm font-semibold py-3 px-4 bg-neutral-800 text-white hover:bg-neutral-700 shadow-md"
+        onClick={() =>
+          newUserMutation.mutate({ email: "something@something.com", age: 12 })
+        }
+      >
         Get some users!!
       </button>
       <ul className="list-disc space-y-4 ">
@@ -35,7 +46,7 @@ function UserList() {
           <li
             key={p.id}
             className="bg-zinc-700 p-1 rounded-md"
-          >{`${p.name}, ${p.age} years old`}</li>
+          >{`${p.email}, ${p.age} years old`}</li>
         ))}
       </ul>
     </>
