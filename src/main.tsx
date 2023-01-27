@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+
 // REGISTER ERROR OVERLAY
 const showErrorOverlay = (err: any) => {
   // must be within function call because that's when the element is defined for sure.
@@ -19,6 +20,11 @@ window.addEventListener("error", showErrorOverlay);
 window.addEventListener("unhandledrejection", ({ reason }) =>
   showErrorOverlay(reason)
 );
+
+if (import.meta.env.DEV) {
+  const { worker } = await import("./mocks/browser");
+  worker.start();
+}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
