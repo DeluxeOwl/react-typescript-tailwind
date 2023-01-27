@@ -1,30 +1,30 @@
 import ky from "ky";
 import { useState } from "react";
 
-interface People {
-  id: string;
+interface User {
+  id: number;
   name: string;
   age: number;
 }
 
-function PeopleList() {
-  const [people, setPeople] = useState<People[]>([]);
+function UserList() {
+  const [users, setUsers] = useState<User[]>([]);
 
-  const handleGetPeople = async () => {
-    const json = await ky.get("/people").json();
-    setPeople(json as People[]);
+  const handleGetUsers = async () => {
+    const json = await ky.get("/users").json();
+    setUsers(json as User[]);
   };
 
   return (
     <>
       <button
-        onClick={handleGetPeople}
+        onClick={handleGetUsers}
         className="active:translate-y-1 transition-all inline-flex justify-center rounded-lg text-sm font-semibold py-3 px-4 bg-neutral-800 text-white hover:bg-neutral-700 shadow-md"
       >
-        Get some people!!
+        Get some users!!
       </button>
       <ul className="list-disc space-y-4 ">
-        {people.map((p) => (
+        {users.map((p) => (
           <li
             key={p.id}
             className="bg-zinc-700 p-1 rounded-md"
@@ -35,4 +35,4 @@ function PeopleList() {
   );
 }
 
-export default PeopleList;
+export default UserList;

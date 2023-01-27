@@ -16,7 +16,8 @@
     "radash": "^10.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.7.0"
+    "react-router-dom": "^6.7.0",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
