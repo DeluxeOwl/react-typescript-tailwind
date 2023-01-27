@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import ky from "ky";
-import { useState } from "react";
 
 interface User {
   id: number;
@@ -13,10 +12,9 @@ function UserList() {
     data: users,
     isLoading,
     isError,
-    error,
   } = useQuery<User[]>({
     queryKey: ["users"],
-    queryFn: () => ky.get("/users/asd").json(),
+    queryFn: () => ky.get("/users").json(),
   });
 
   if (isLoading) {
@@ -24,7 +22,7 @@ function UserList() {
   }
 
   if (isError) {
-    return <div className="text-red-500">An error occured</div>;
+    return <div className="text-red-500">An error occured.</div>;
   }
 
   return (
