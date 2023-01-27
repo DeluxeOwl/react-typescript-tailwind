@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import ky from "ky";
 import { useState } from "react";
 
@@ -8,23 +9,31 @@ interface User {
 }
 
 function UserList() {
-  const [users, setUsers] = useState<User[]>([]);
+  const {
+    data: users,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => ky.get("/users/asd").json(),
+  });
 
-  const handleGetUsers = async () => {
-    const json = await ky.get("/users").json();
-    setUsers(json as User[]);
-  };
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
+
+  if (isError) {
+    return <div className="text-red-500">An error occured</div>;
+  }
 
   return (
     <>
-      <button
-        onClick={handleGetUsers}
-        className="active:translate-y-1 transition-all inline-flex justify-center rounded-lg text-sm font-semibold py-3 px-4 bg-neutral-800 text-white hover:bg-neutral-700 shadow-md"
-      >
+      <button className="active:translate-y-1 transition-all inline-flex justify-center rounded-lg text-sm font-semibold py-3 px-4 bg-neutral-800 text-white hover:bg-neutral-700 shadow-md">
         Get some users!!
       </button>
       <ul className="list-disc space-y-4 ">
-        {users.map((p) => (
+        {users?.map((p) => (
           <li
             key={p.id}
             className="bg-zinc-700 p-1 rounded-md"
