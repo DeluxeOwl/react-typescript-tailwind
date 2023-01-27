@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ky from "ky";
 
 interface User {
@@ -8,6 +8,7 @@ interface User {
 }
 
 function UserList() {
+  const queryClient = useQueryClient();
   const {
     data: users,
     isLoading,
@@ -20,6 +21,9 @@ function UserList() {
   const newUserMutation = useMutation({
     mutationFn: ({ email, age }: Omit<User, "id">) => {
       return ky.post("/users", { json: { email, age } }).json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
     },
   });
 
@@ -34,7 +38,8 @@ function UserList() {
   return (
     <>
       <button
-        className="active:translate-y-1 transition-all inline-flex justify-center rounded-lg text-sm font-semibold py-3 px-4 bg-neutral-800 text-white hover:bg-neutral-700 shadow-md"
+        disabled={newUserMutation.isLoading}
+        className="disabled:cursor-not-allowed disabled:opacity-75 active:translate-y-1 transition-all inline-flex justify-center rounded-lg text-sm font-semibold py-3 px-4 bg-neutral-800 text-white hover:bg-neutral-700 shadow-md"
         onClick={() =>
           newUserMutation.mutate({ email: "something@something.com", age: 12 })
         }

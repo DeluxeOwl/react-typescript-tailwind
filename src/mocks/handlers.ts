@@ -31,9 +31,10 @@ export const handlers = [
   }),
 
   rest.post("/users", async (req, res, ctx) => {
+    await sleep(500);
     const jsonReq = await req.json();
 
-    const result = await CreateUserParams.safeParse(jsonReq);
+    const result = CreateUserParams.safeParse(jsonReq);
 
     if (!result.success) {
       return res(
